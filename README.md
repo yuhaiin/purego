@@ -42,7 +42,7 @@ Tier 2 platforms are supported by PureGo on a best-effort basis. Critical bugs o
 
 - **Android**: 386<sup>1,3</sup>, arm<sup>1,3</sup>
 - **FreeBSD**: amd64<sup>3,4</sup>, arm64<sup>3,4</sup>
-- **Linux**: 386<sup>3</sup>, arm<sup>3</sup>, loong64<sup>2</sup>, ppc64le<sup>2</sup>, riscv64<sup>3</sup>, s390x<sup>3, 5</sup>
+- **Linux**: 386<sup>3</sup>, arm<sup>3</sup>, mips<sup>8</sup>, mipsle<sup>8</sup>, loong64<sup>2</sup>, ppc64le<sup>2</sup>, riscv64<sup>3</sup>, s390x<sup>3, 5</sup>
 - **NetBSD**: amd64<sup>3</sup>, arm64<sup>3</sup>
 - **Windows**: 386<sup>3,6</sup>, arm<sup>3,6,7</sup>
 
@@ -55,6 +55,7 @@ Tier 2 platforms are supported by PureGo on a best-effort basis. Critical bugs o
 5. These architectures require CGO_ENABLED=1 to compile in versions before Go 1.27, but will be supported without Cgo in Go 1.27 and later
 6. These architectures only support `SyscallN` and `NewCallback`
 7. These architectures are no longer supported as of Go 1.26
+8. Experimental MIPS O32 integer/pointer-only support without Cgo on glibc Linux; float arguments and results, callbacks, and structs by value are not supported. Runtime testing with QEMU is required before relying on this platform.
 
 ## Example
 

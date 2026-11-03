@@ -142,6 +142,18 @@ func RegisterFunc(fptr any, cfn uintptr) {
 	if ty.NumOut() > 1 {
 		panic("purego: function can only return zero or one values")
 	}
+	// MIPS O32 supports integer/pointer calls in this backend. Hard-float
+	// register assignment and floating-point return values are not supported.
+	if runtime.GOARCH == "mips" || runtime.GOARCH == "mipsle" {
+		for i := range ty.NumIn() {
+			if ty.In(i).Kind() == reflect.Float32 || ty.In(i).Kind() == reflect.Float64 {
+				panic("purego: floating-point arguments are not supported on MIPS")
+			}
+		}
+		if ty.NumOut() == 1 && (ty.Out(0).Kind() == reflect.Float32 || ty.Out(0).Kind() == reflect.Float64) {
+			panic("purego: floating-point returns are not supported on MIPS")
+		}
+	}
 	if cfn == 0 {
 		panic("purego: cfn is nil")
 	}
@@ -393,7 +405,11 @@ func RegisterFunc(fptr any, cfn uintptr) {
 		case reflect.Uint64:
 			if is32bit {
 				// high-word is recorded at a2 for 32-bit platforms and 64-bit returns
-				v.SetUint(uint64(syscall.a1) | (uint64(syscall.a2) << 32))
+				if runtime.GOARCH == "mips" {
+					v.SetUint(uint64(syscall.a2) | (uint64(syscall.a1) << 32))
+				} else {
+					v.SetUint(uint64(syscall.a1) | (uint64(syscall.a2) << 32))
+				}
 			} else {
 				v.SetUint(uint64(syscall.a1))
 			}
@@ -401,7 +417,11 @@ func RegisterFunc(fptr any, cfn uintptr) {
 			v.SetUint(uint64(syscall.a1))
 		case reflect.Int64:
 			if is32bit {
-				v.SetInt(int64(syscall.a1) | (int64(syscall.a2) << 32))
+				if runtime.GOARCH == "mips" {
+					v.SetInt(int64(uint64(syscall.a2) | (uint64(syscall.a1) << 32)))
+				} else {
+					v.SetInt(int64(uint64(syscall.a1) | (uint64(syscall.a2) << 32)))
+				}
 			} else {
 				v.SetInt(int64(syscall.a1))
 			}
@@ -486,9 +506,14 @@ func addValue(v reflect.Value, keepAlive []any, addInt func(x uintptr), addFloat
 		if isARMPaddingNeeded(v.Type(), *numInts, *numStack) {
 			addInt(0)
 		}
-		addInt(uintptr(v.Uint()))
-		if is32bit {
-			addInt(uintptr(v.Uint() >> 32)) // on 32bit we must add high word too
+		if runtime.GOARCH == "mips" {
+			addInt(uintptr(v.Uint() >> 32)) // O32 big endian stores the high word first
+			addInt(uintptr(v.Uint()))
+		} else {
+			addInt(uintptr(v.Uint()))
+			if is32bit {
+				addInt(uintptr(v.Uint() >> 32))
+			}
 		}
 	case reflect.Uintptr, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32:
 		addInt(uintptr(v.Uint()))
@@ -496,9 +521,14 @@ func addValue(v reflect.Value, keepAlive []any, addInt func(x uintptr), addFloat
 		if isARMPaddingNeeded(v.Type(), *numInts, *numStack) {
 			addInt(0)
 		}
-		addInt(uintptr(v.Int()))
-		if is32bit {
+		if runtime.GOARCH == "mips" {
 			addInt(uintptr(v.Int() >> 32))
+			addInt(uintptr(v.Int()))
+		} else {
+			addInt(uintptr(v.Int()))
+			if is32bit {
+				addInt(uintptr(v.Int() >> 32))
+			}
 		}
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32:
 		addInt(uintptr(v.Int()))
@@ -514,6 +544,9 @@ func addValue(v reflect.Value, keepAlive []any, addInt func(x uintptr), addFloat
 			addInt(0)
 		}
 	case reflect.Float32:
+		if runtime.GOARCH == "mips" || runtime.GOARCH == "mipsle" {
+			panic("purego: floating-point arguments are not supported on MIPS")
+		}
 		switch runtime.GOARCH {
 		case "ppc64le":
 			// A single-precision argument occupies a floating-point register in double format on Power.
@@ -532,6 +565,9 @@ func addValue(v reflect.Value, keepAlive []any, addInt func(x uintptr), addFloat
 			addFloat(uintptr(math.Float32bits(float32(v.Float()))))
 		}
 	case reflect.Float64:
+		if runtime.GOARCH == "mips" || runtime.GOARCH == "mipsle" {
+			panic("purego: floating-point arguments are not supported on MIPS")
+		}
 		bits := math.Float64bits(v.Float())
 		if isARMFloatPaddingNeeded(v.Type(), *numFloats, *numStack) {
 			// if floats are spilled onto stack on ARM than we must follow AAPCS C.7
@@ -704,8 +740,8 @@ func numOfFloatRegisters() int {
 	case "arm":
 		// 8 doubles (16 words) are always reserved by asm trampolines, even if softfloat is used
 		return 16
-	case "386":
-		// i386 SysV ABI passes all arguments on the stack, including floats
+	case "386", "mips", "mipsle":
+		// i386 and the current MIPS O32 implementation use integer-only calls.
 		return 0
 	default:
 		// since this platform isn't supported and can therefore only access
@@ -723,7 +759,7 @@ func numOfIntegerRegisters() int {
 	case "s390x":
 		// S390X uses R2-R6 for integer arguments
 		return 5
-	case "arm":
+	case "arm", "mips", "mipsle":
 		return 4
 	case "386":
 		// i386 SysV ABI passes all arguments on the stack
@@ -767,7 +803,7 @@ func isARMPaddingNeeded(ty reflect.Type, numInts, numStack int) bool {
 	// even core register (C.3); if they then spill, the stack slot is
 	// 8-byte aligned too (C.7).
 	// https://github.com/ARM-software/abi-aa/blob/main/aapcs32/aapcs32.rst#6111handling-values-larger-than-32-bits
-	if runtime.GOARCH != "arm" || ty.Size() != 8 {
+	if (runtime.GOARCH != "arm" && runtime.GOARCH != "mips" && runtime.GOARCH != "mipsle") || ty.Size() != 8 {
 		return false
 	}
 	if numInts >= 0 && numInts < numOfIntegerRegisters() {
