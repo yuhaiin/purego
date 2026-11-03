@@ -17,7 +17,7 @@ TEXT _cgo_purego_setegid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -47,7 +47,7 @@ TEXT _cgo_purego_setegid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -62,7 +62,7 @@ TEXT _cgo_purego_seteuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -92,7 +92,7 @@ TEXT _cgo_purego_seteuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -107,7 +107,7 @@ TEXT _cgo_purego_setgid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -137,7 +137,7 @@ TEXT _cgo_purego_setgid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -152,7 +152,7 @@ TEXT _cgo_purego_setregid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -182,7 +182,7 @@ TEXT _cgo_purego_setregid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -197,7 +197,7 @@ TEXT _cgo_purego_setresgid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -227,7 +227,7 @@ TEXT _cgo_purego_setresgid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -242,7 +242,7 @@ TEXT _cgo_purego_setresuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -272,7 +272,7 @@ TEXT _cgo_purego_setresuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -287,7 +287,7 @@ TEXT _cgo_purego_setreuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -317,7 +317,7 @@ TEXT _cgo_purego_setreuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -332,7 +332,7 @@ TEXT _cgo_purego_setuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -362,7 +362,7 @@ TEXT _cgo_purego_setuid_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -377,7 +377,7 @@ TEXT _cgo_purego_setgroups_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -407,7 +407,7 @@ TEXT _cgo_purego_setgroups_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
