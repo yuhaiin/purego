@@ -6,7 +6,7 @@
 #include "textflag.h"
 
 // Each C-to-Go trampoline preserves all O32 callee-saved registers,
-// including g/R30 and floating-point callee-saved registers on hardfloat.
+// including g and floating-point callee-saved registers on hardfloat.
 // R29 stays 8-byte aligned; the first 16 bytes form O32's outgoing home area.
 //
 TEXT x_cgo_init_trampoline(SB), NOSPLIT|NOFRAME, $0-0
@@ -19,7 +19,7 @@ TEXT x_cgo_init_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -50,7 +50,7 @@ TEXT x_cgo_init_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -65,7 +65,7 @@ TEXT x_cgo_thread_start_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -95,7 +95,7 @@ TEXT x_cgo_thread_start_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -110,7 +110,7 @@ TEXT x_cgo_setenv_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -140,7 +140,7 @@ TEXT x_cgo_setenv_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -155,7 +155,7 @@ TEXT x_cgo_unsetenv_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -185,7 +185,7 @@ TEXT x_cgo_unsetenv_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -200,7 +200,7 @@ TEXT x_cgo_notify_runtime_init_done_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -227,7 +227,7 @@ TEXT x_cgo_notify_runtime_init_done_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -242,7 +242,7 @@ TEXT x_cgo_bindm_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -270,7 +270,7 @@ TEXT x_cgo_bindm_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
@@ -285,7 +285,7 @@ TEXT threadentry_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW R21, 44(R29)
     MOVW R22, 48(R29)
     MOVW R23, 52(R29)
-    MOVW R30, 56(R29)
+    MOVW g, 56(R29)
     MOVW R31, 60(R29)
 #ifndef GOMIPS_softfloat
     MOVD F20, 64(R29)
@@ -316,7 +316,7 @@ TEXT threadentry_trampoline(SB), NOSPLIT|NOFRAME, $0-0
     MOVW 44(R29), R21
     MOVW 48(R29), R22
     MOVW 52(R29), R23
-    MOVW 56(R29), R30
+    MOVW 56(R29), g
     MOVW 60(R29), R31
     ADDU $128, R29
     RET
